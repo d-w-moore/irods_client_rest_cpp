@@ -16,7 +16,7 @@ get_yum_prerequisites_list()
 {
     command rpm -qRp "$@" |\
     command grep -v '[</>()]' |\
-    command grep -Ev '^irods-(dev|icommands|runtime|server|database)' |\
+    command grep -Ev '^irods-(dev|icommands|runtime|server|database|externals)' |\
     remove_duplicates
 }
 
@@ -39,8 +39,8 @@ get_apt_prerequisites_list()
         dpkg -I "$pkgfile" |\
         command grep -i '^\s*depends:' |\
         tr ',' '\n' |\
-        command grep -v '(.*)' | sed 's/^\s*depends://i' |\
-        command grep -Ev '^irods-(dev|icommands|runtime|server|database)' |\
+        command grep -v '(.*)' | sed 's/^\s*depends://i' | sed 's/^\s*//' | \
+        command grep -Ev '^irods-(dev|icommands|runtime|server|database|externals)' |\
        	sed -e 's/^\s*//' -e 's/\s*$//'
     done | remove_duplicates
 }
