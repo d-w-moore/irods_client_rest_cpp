@@ -12,6 +12,10 @@ remove_duplicates ()
 # centos
 # ------
 
+yum_list_installed_irods_externals () {
+  rpm -qa irods-externals-\*
+} 
+
 get_yum_prerequisites_list() 
 {
     command rpm -qRp "$@" |\
@@ -32,6 +36,10 @@ centos_setup()
 # ubuntu
 # ------
 
+apt_list_installed_irods_externals () {
+  dpkg -l| grep '^ii' | sed  's/ii\s*//' | grep ^irods-externals|sed 's/\s.*$//'
+}
+
 get_apt_prerequisites_list() 
 {
     local pkgfile
@@ -43,6 +51,25 @@ get_apt_prerequisites_list()
         command grep -Ev '^irods-(dev|icommands|runtime|server|database)' |\
        	sed -e 's/^\s*//' -e 's/\s*$//'
     done | remove_duplicates
+}
+
+# -- utility --
+
+subtract_args_from_stdin() {
+  awk '
+  BEGIN {
+      for (x=1;x<ARGC;x++) { arg[x]=ARGV[x] }
+      delete ARGV
+  }
+  { lookup[$0]=1 } 
+  END {
+      for (x in arg) { delete lookup[arg[x]] }
+      for (x in lookup) { print x }
+  }' "$@"
+}   
+
+filter_out_irods_externals_packages_already_installed () {
+  subtract_args_from_stdin $()
 }
 
 ubuntu_setup()
