@@ -22,7 +22,7 @@ RUN rpm -ivh /irods_packages_in/irods-externals-{clang*6.0-0,cmake3.11.4,pistach
 
 # Install prereqs for iRODS packages:
 
-RUN /tmp/PKGFILE_install_dependencies /irods_packages_in build-only
+RUN  bash -e -x /tmp/PKGFILE_install_dependencies /irods_packages_in build-only
 
 RUN git clone "${irods_rest_client_repo}" src_repo
 RUN cd src_repo && git checkout "${irods_rest_client_commitish}"

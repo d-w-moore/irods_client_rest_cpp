@@ -20,7 +20,9 @@ RUN . /tmp/PKGFILE_install_dependencies && \
 
 RUN rpm -ivh /irods_packages_in/irods-externals-*.rpm
 
+RUN yum install -y ca-certificates
 RUN /tmp/PKGFILE_install_dependencies /irods_packages_in 
+#--------#          RUN echo '****-****' ; ls /irods_packages_in/ ; echo '********'
 RUN rpm -ivh /irods_packages_in/irods*client[-_]rest[-_]cpp*.rpm
 RUN yum install -y postgresql-server
 RUN yum install -y nginx
